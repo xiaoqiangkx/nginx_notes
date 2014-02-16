@@ -1,6 +1,6 @@
 
 CC =	cc
-CFLAGS =  -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g 
+CFLAGS =  -pipe  -O -W -Wall -Wpointer-arith -Wno-unused-parameter -Werror -g  -I/usr/include/ImageMagick -fopenmp
 CPP =	cc -E
 LINK =	$(CC)
 
@@ -95,6 +95,9 @@ HTTP_DEPS = src/http/ngx_http.h \
 
 HTTP_INCS = -I src/http \
 	-I src/http/modules
+
+
+ADDON_DEPS = $(CORE_DEPS)  $(HTTP_DEPS)
 
 
 objs/nginx:	objs/src/core/nginx.o \
@@ -204,6 +207,7 @@ objs/nginx:	objs/src/core/nginx.o \
 	objs/src/http/modules/ngx_http_upstream_ip_hash_module.o \
 	objs/src/http/modules/ngx_http_upstream_least_conn_module.o \
 	objs/src/http/modules/ngx_http_upstream_keepalive_module.o \
+	objs/addon/nginx_circle_gif/ngx_http_circle_gif_module.o \
 	objs/ngx_modules.o
 
 	$(LINK) -o objs/nginx \
@@ -314,8 +318,9 @@ objs/nginx:	objs/src/core/nginx.o \
 	objs/src/http/modules/ngx_http_upstream_ip_hash_module.o \
 	objs/src/http/modules/ngx_http_upstream_least_conn_module.o \
 	objs/src/http/modules/ngx_http_upstream_keepalive_module.o \
+	objs/addon/nginx_circle_gif/ngx_http_circle_gif_module.o \
 	objs/ngx_modules.o \
-	-lpthread -lcrypt -lpcre -lcrypto -lcrypto -lz
+	-lpthread -lcrypt -lMagickWand -lpcre -lcrypto -lcrypto -lz
 	
 
 
@@ -1073,6 +1078,13 @@ objs/src/http/modules/ngx_http_upstream_keepalive_module.o:	$(CORE_DEPS) $(HTTP_
 	$(CC) -c $(CFLAGS) $(CORE_INCS) $(HTTP_INCS) \
 		-o objs/src/http/modules/ngx_http_upstream_keepalive_module.o \
 		src/http/modules/ngx_http_upstream_keepalive_module.c
+
+
+objs/addon/nginx_circle_gif/ngx_http_circle_gif_module.o:	$(ADDON_DEPS) \
+	../3rdmodules/nginx_circle_gif/ngx_http_circle_gif_module.c
+	$(CC) -c $(CFLAGS)  $(ALL_INCS) \
+		-o objs/addon/nginx_circle_gif/ngx_http_circle_gif_module.o \
+		../3rdmodules/nginx_circle_gif/ngx_http_circle_gif_module.c
 
 
 manpage:	objs/nginx.8
