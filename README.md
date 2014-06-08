@@ -64,4 +64,4 @@ Module的调用过程可以十分定制化. 能力越大, 责任也越大, 直�
 ================
 
 - [X] Day 1: 2014-06-07 Reading Day -- High Level Understanding
-- [ ] Example
+- [X] Day 2: 2014-06-08 Reading Day -- More Emiller
